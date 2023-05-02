@@ -40,17 +40,7 @@
 - [8. Lambda Functions](#8-lambda-functions)
 - [9. Exceptions and Errors](#9-exceptions-and-errors)
 - [10. Logging](#10-logging)
-- [Log Level](#log-level)
-- [Configuration](#configuration)
-- [Logging in modules and logger hierarchy](#logging-in-modules-and-logger-hierarchy)
-- [Propagation](#propagation)
-- [LogHandlers](#loghandlers)
-    - [Example of a filter](#example-of-a-filter)
-- [Other configuration methods](#other-configuration-methods)
-    - [.conf file](#conf-file)
-- [Capture Stack traces](#capture-stack-traces)
-- [Rotating FileHandler](#rotating-filehandler)
-- [TimedRotatingFileHandler](#timedrotatingfilehandler)
+
 
 ## Cheat Sheets <!-- omit in toc -->
 Python cheat sheets are a useful reference tool for programmers looking to improve their coding skills. They provide a condensed summary of essential syntax and functions, making it easier to write code quickly and accurately. Cheat sheets cover a variety of topics, including data types, control structures, functions, modules, and libraries. Whether you are a beginner or an experienced programmer, Python cheat sheets are a valuable resource to have at your fingertips.
@@ -942,12 +932,13 @@ except ValueTooSmallError as e:
 <br/>
 <br/>
 
-## 10. Logging
+
+## 10. Logging 
 [🔼 Back to top](#content)
 
 The logging module in Python is a powerful built-in module so you can quickly add logging to your application.  
 `import logging`
-## Log Level
+## Log Level <!-- omit in toc -->
 There are 5 different log levels indicating the serverity of events. By default, the system logs only events with level *WARNING* and above.
 
 ```Python
@@ -1179,7 +1170,7 @@ logger.addHandler(logHandler)****
 <br/>
 <br/>
 
-## 8. Lambda
+## 11. Next
 [🔼 Back to top](#content)
 ```Python
 
