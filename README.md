@@ -1,9 +1,10 @@
-# Intermediate Python Programming
+# Intermediate Python Programming <!-- omit in toc -->
 
 
 
 
-### Here's a summary of some of the intermediate-level topics for Python programming covered in a [YouTube]((https://www.youtube.com/watch?v=HGOBQPFzWKo&t=213s)) video.
+## Here's a summary of some of the intermediate-level topics for Python programming covered in this [YouTube]((https://www.youtube.com/watch?v=HGOBQPFzWKo&t=213s)) video. <!-- omit in toc -->
+<br/>
 
 1. Data types: lists, tuples, dictionaries, sets, and strings
 2. Collections: specialized data structures like named tuples, deque, counter, and defaultdict
@@ -21,43 +22,52 @@
 14. Function Arguments: how to pass arguments to functions and work with default arguments, keyword arguments, and variable-length argument lists
 15. Shallow vs Deep Copying: understanding the difference between these two techniques for copying objects in Python
 16. Context Managers: using the "with" statement to manage resources and ensure proper clean-up of objects after use.
+<br/>
+<br/>
+
+<!-- omit in toc -->
+## Content: 
 
 
-## Contents:
 
-1. [Lists](#1-lists)
-2. [Tuples](#2-tuples)
-3. [Dictionaries](#3-dictionaries)
-4. [Sets](#4-sets)
-5. [Strings](#5-strings)
-6. [Collections](#6-collections)
-7. [Itertools](#7-itertools)
-8. [Lambda Functions](#8-lambda-functions)
-9. [Exceptions and Errors](#9-exceptions-and-errors)
-10. [Logging](#10-logging)
-11. [JSON](#11-json)
-12. [Random Numbers](#12-random-numbers)
-13. [Decorators](#13-decorators)
-14. [Generators](#14-generators)
-15. [Threading vs Multiprocessing](#15-threading-vs-multiprocessing)
-16. [Multithreading](#16-multithreading)
-17. [Multiprocessing](#17-multiprocessing)
-18. [Function Arguments](#18-function-arguments)
-19. [The Asterisk (*) Operator](#19-the-asterisk--operator)
-20. [Shallow vs Deep Copying](#20-shallow-vs-deep-copying)
-21. [Context Managers](#21-context-managers)
+- [1. Lists](#1-lists)
+- [2. Tuples](#2-tuples)
+- [3. Dictionaries](#3-dictionaries)
+- [4. Sets](#4-sets)
+- [5. Strings](#5-strings)
+- [6. Collections](#6-collections)
+- [7. Itertools](#7-itertools)
+- [8. Lambda Functions](#8-lambda-functions)
+- [9. Exceptions and Errors](#9-exceptions-and-errors)
+- [10. Logging](#10-logging)
+- [Log Level](#log-level)
+- [Configuration](#configuration)
+- [Logging in modules and logger hierarchy](#logging-in-modules-and-logger-hierarchy)
+- [Propagation](#propagation)
+- [LogHandlers](#loghandlers)
+    - [Example of a filter](#example-of-a-filter)
+- [Other configuration methods](#other-configuration-methods)
+    - [.conf file](#conf-file)
+- [Capture Stack traces](#capture-stack-traces)
+- [Rotating FileHandler](#rotating-filehandler)
+- [TimedRotatingFileHandler](#timedrotatingfilehandler)
 
-## Cheat Sheets
+## Cheat Sheets <!-- omit in toc -->
 Python cheat sheets are a useful reference tool for programmers looking to improve their coding skills. They provide a condensed summary of essential syntax and functions, making it easier to write code quickly and accurately. Cheat sheets cover a variety of topics, including data types, control structures, functions, modules, and libraries. Whether you are a beginner or an experienced programmer, Python cheat sheets are a valuable resource to have at your fingertips.
+<br/>
+<br/>
 
-### [Python Cheat Sheet [pdf 1]](https://courses.cs.washington.edu/courses/cse163/22wi/resources/python-cheat-sheet.pdf)
+### [Python Cheat Sheet [pdf 1]](https://courses.cs.washington.edu/courses/cse163/22wi/resources/python-cheat-sheet.pdf) 
 
-### [Python Cheat Sheet [pdf 2]](https://faculty.ncssm.edu/~morrison/resources/python/py_cheat.pdf)
-
-### [Python Crash Course [Book summary]](https://github.com/ehmatthes/pcc/releases/download/v1.0.0/beginners_python_cheat_sheet_pcc_all.pdf)
-
+### [Python Cheat Sheet [pdf 2]](https://faculty.ncssm.edu/~morrison/resources/python/py_cheat.pdf) 
+### [Python Crash Course [Book summary]](https://github.com/ehmatthes/pcc/releases/download/v1.0.0/beginners_python_cheat_sheet_pcc_all.pdf) 
+<br/>
+<br/>
 
 ## 1. Lists
+[🔼 Back to top](#content)
+
+```python
 
 ```python
 # lists: ordered, mutable, allows duplicate elements
@@ -154,8 +164,11 @@ a = [1, 2, 3, 4, 5, 6]
 b = [i*i for i in a] 
 print(b) # [1, 4, 9, 16, 25, 36] ; squares each element in a and adds it to b in a new list [expression for item in list]
 ```
+<br/>
+<br/>
 
 ## 2. Tuples
+[🔼 Back to top](#content)
 ```Python
 # Tuple: ordered, immutable, allows duplicate elements
 
@@ -227,8 +240,11 @@ import timeit
 print(timeit.timeit(stmt="[0, 1, 2, 3, 4, 5]", number=1000000)) # 0.066 seconds
 print(timeit.timeit(stmt="(0, 1, 2, 3, 4, 5)", number=1000000)) # 0.011 seconds
 ```
+<br/>
+<br/>
 
 ## 3. Dictionaries
+[🔼 Back to top](#content)
 ```Python
 # Dictionary: key-value pairs, unordered, mutable
 
@@ -314,8 +330,11 @@ my_dict = {mytuple: 15}
 print(my_dict) # {(8, 7): 15}; keys can be tuples
 # We can't use lists as keys because lists are mutable and can be changed, it not hashable. Tuples are immutable and can't be changed, so they can be used as keys.
 ```
+<br/>
+<br/>
 
 ## 4. Sets
+[🔼 Back to top](#content)
 ```Python
 # Set: unordered collection of unique elements, mutable (can be changed)
 
@@ -447,8 +466,11 @@ a = frozenset([1, 2, 3, 4]) # immutable set; cannot be changed
 print(a) # frozenset({1, 2, 3, 4})
 # Union, intersection, difference, symmetric_difference, issubset, issuperset, isdisjoint, copy are supported
 ```
+<br/>
+<br/>
 
 ## 5. Strings
+[🔼 Back to top](#content)
 ```Python
 # Strings: ordered, immutable, text representation
 
@@ -559,8 +581,11 @@ print(string_7) # the variable is 3.1234567 and 6
 string_7 = f"the variable is {var*3} and {var2:.2f}" # {} evaluates the expression inside in runtime
 print(string_7) # the variable is 9.3703701 and 6.00
 ```
+<br/>
+<br/>
 
 ## 6. Collections
+[🔼 Back to top](#content)
 ```Python
 # collections: Counter, namedtuple, OrderedDict, defaultdict, deque
 
@@ -646,8 +671,11 @@ print(d) # deque([4, 5, 6, 3, 2, 1])
 d.rotate(-1)
 print(d) # deque([5, 6, 3, 2, 1, 4])
 ```
+<br/>
+<br/>
 
 ## 7. Itertools
+[🔼 Back to top](#content)
 ```Python
 # itertools: product, permutations, combinations, accumulate, groupby, and infinite iterators
 # collection of tools for handling iterators; functions that operate on iterators to produce more complex iterators
@@ -747,13 +775,414 @@ for i in cycle(a):
 for i in repeat(1, 4): # repeat 1 four times; will not be an infinite loop
     print(i) # 1 1 1 1
 ```
+<br/>
+<br/>
+
+## 8. Lambda Functions
+[🔼 Back to top](#content)
+```Python
+# lambda arguments: expression <----syntax (small, one  line anonymous function)
+
+add10 = lambda x: x + 10
+print(add10(5)) # 15
+
+def add10_func(x):
+    return x + 10
+
+mult = lambda x, y: x * y
+print(mult(2, 7)) # 14
+
+# used  when you need a function for a short period of time
+
+
+#sorted
+points2D = [(1, 2), (15, 1), (5, -1), (10, 4)]
+points2D_sorted = sorted(points2D)
+print(points2D) # [(1, 2), (15, 1), (5, -1), (10, 4)]'
+print(points2D_sorted) # [(1, 2), (5, -1), (10, 4), (15, 1)]
+# sort by x
+
+points2D = [(1, 2), (15, 1), (5, -1), (10, 4)]
+points2D_sorted = sorted(points2D, key=lambda x: x[1])
+print(points2D_sorted) # [(5, -1), (15, 1), (1, 2), (10, 4)]
+# sort by y
+
+def sort_by_y(x):
+    return x[1]
+
+points2D = [(1, 2), (15, 1), (5, -1), (10, 4)]
+points2D_sorted = sorted(points2D, key=lambda x: x[0] + x[1])
+print(points2D_sorted) # [(1, 2), (5, -1), (10, 4), (15, 1)]
+# sort by sum of x and y
+
+
+# map(func, seq)
+a = [1, 2, 3, 4, 5]
+b = map(lambda x: x * 2, a)
+print(list(b)) # [2, 4, 6, 8, 10]
+# map each element of a to x * 2
+
+c = [x * 2 for x in a]  # list comprehension same as map
+
+
+# filter(func, seq)
+a = [1, 2, 3, 4, 5, 6]
+b = filter(lambda x: x % 2 == 0, a)
+print(list(b)) # [2, 4, 6]
+# filter out odd numbers
+
+c = [x for x in a if x % 2 == 0] # list comprehension same as filter
+
+# reduce(func, seq)
+from functools import reduce
+a = [1, 2, 3, 4,]
+
+product_a = reduce(lambda x, y: x * y, a)
+print(product_a) # 24
+# multiply all numbers in a
+```
+<br/>
+<br/>
+
+## 9. Exceptions and Errors
+[🔼 Back to top](#content)
+```Python
+# Errors and Exceptions
+
+# Syntax Errors - also known as parsing errors
+
+a = 5 print(a) # SyntaxError: invalid syntax
+
+a=5
+print(a)) # SyntaxError: unmatched ')'
+
+a = 5 + '10' # TypeError: unsupported operand type(s) for +: 'int' and 'str'
+
+import somemodule # ModuleNotFoundError: No module named 'somemodule'
+
+b = c # NameError: name 'c' is not defined
+
+f = open('somefile.txt') # FileNotFoundError: [Errno 2] No such file or directory: 'somefile.txt'
+
+a = [1, 2, 3]
+a.remove(4) # ValueError: list.remove(x): x not in list
+
+my_dict = {'name': 'Max'}
+my_dict['age'] # KeyError: 'age'
+
+
+X = -5
+if X < 0:
+    raise Exception('X should be positive') # Exception: X should be positive
+
+x = -5
+assert (x >= 0), 'x is not positive' # AssertionError: x is not positive
+
+
+
+
+# try except else finally
+try:
+    a = 5 / 0
+except:
+    print('an error happened') #program continues
+
+
+try:
+    a = 5 / 0
+except Exception as e:
+    print(e) #division by zero
+
+
+try:
+    a = 5 / 0
+    b = a + '10'
+except ZeroDivisionError as e:
+    print(e)
+except TypeError as e:
+    print(e)
+else:
+    print('everything is fine') #else runs if no exception
+finally:
+    print('cleaning up...') #finally always runs
+
+
+
+
+
+# Custom Exceptions
+class ValueTooHighError(Exception):
+    pass
+
+class ValueTooSmallError(Exception):
+    def __init__(self, message, value):
+        self.message = message
+        self.value = value
+
+def test_value(x):
+    if x > 100:
+        raise ValueTooHighError('value is too high')
+
+    if x < 5:
+        raise ValueTooSmallError('value is too small', x)
+
+
+try:
+    test_value(2)
+except ValueTooHighError as e:
+    print(e)
+except ValueTooSmallError as e:
+    print(e.message, e.value) #we can access the attributes of the exception
+
+
+
+
+
+```
+<br/>
+<br/>
+
+## 10. Logging
+[🔼 Back to top](#content)
+
+The logging module in Python is a powerful built-in module so you can quickly add logging to your application.  
+`import logging`
+## Log Level
+There are 5 different log levels indicating the serverity of events. By default, the system logs only events with level *WARNING* and above.
+
+```Python
+import logging
+logging.debug('This is a debug message')
+logging.info('This is an info message')
+logging.warning('This is a warning message')
+logging.error('This is an error message')
+logging.critical('This is a critical message')
+```
+## Configuration
+With `basicConfig(**kwargs)` you can customize the root logger. The most common parameters are the *level*, the *format*, and the *filename*. See https://docs.python.org/3/library/logging.html#logging.basicConfig for all possible arguments. See also https://docs.python.org/3/library/logging.html#logrecord-attributes for possible formats and https://docs.python.org/3/library/time.html#time.strftime how to set the time string. Note that this function should only be called once, and typically first thing after importing the module. It has no effect if the root logger already has handlers configured. For example calling `logging.info(...)` before the *basicConfig* will already set a handler.
+```Python
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
+# Now also debug messages will get logged with a different format.
+logging.debug('Debug message')
+
+# This would log to a file instead of the console.
+# logging.basicConfig(level=logging.DEBUG, filename='app.log')
+```
+## Logging in modules and logger hierarchy
+Best practice in your application with multiple modules is to create an internal logger using the `__name__` global variable. This will create a logger with the name of your module and ensures no name collisions. The logging module creates a hierarchy of loggers, starting with the root logger, and adding the new logger to this hierarchy. If you then import your module in another module, log messages can be associated with the correct module through the logger name. Note that changing the basicConfig of the root logger will also affect the log events of the other (lower) loggers in the hierarchy.
+
+```Python
+# helper.py
+# -------------------------------------
+import logging
+logger = logging.getLogger(__name__)
+logger.info('HELLO')
+
+# main.py
+# -------------------------------------
+import logging
+logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s')
+import helper
+
+# --> Output when running main.py
+# helper - INFO - HELLO
+```
+## Propagation
+By default, all created loggers will pass the log events to the handlers of higher loggers, in addition to any handlers attached to the created logger. You can deactivate this by setting `propagate = False`. Sometimes when you wonder why you don't see log messages from another module, then this property may be the reason.
+```Python
+# helper.py
+# -------------------------------------
+import logging
+logger = logging.getLogger(__name__)
+logger.propagate = False
+logger.info('HELLO')
+
+# main.py
+# -------------------------------------
+import logging
+logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s')
+import helper
+
+# --> No output when running main.py since the helper module logger does not propagate its messages to the root logger
+```
+## LogHandlers
+Handler objects are responsible for dispatching the appropriate log messages to the handler's specific destination. For example you can use different handlers to send log messaged to the standard output stream, to files, via HTTP, or via Email. Typically you configure each handler with a level (`setLevel()`), a formatter (`setFormatter()`), and optionally a filter (`addFilter()`). See https://docs.python.org/3/howto/logging.html#useful-handlers for possible built-in handlers. Of course you can also implement your own handlers by deriving from these classes.
+```Python
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Create handlers
+stream_handler = logging.StreamHandler()
+file_handler = logging.FileHandler('file.log')
+
+# Configure level and formatter and add it to handlers
+stream_handler.setLevel(logging.WARNING) # warning and above is logged to the stream
+file_handler.setLevel(logging.ERROR) # error and above is logged to a file
+
+stream_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+file_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stream_handler.setFormatter(stream_format)
+file_handler.setFormatter(file_format)
+
+# Add handlers to the logger
+logger.addHandler(stream_handler)
+logger.addHandler(file_handler)
+
+logger.warning('This is a warning') # logged to the stream
+logger.error('This is an error') # logged to the stream AND the file!
+```
+#### Example of a filter
+```Python
+class InfoFilter(logging.Filter):
+    
+    # overwrite this method. Only log records for which this
+    # function evaluates to True will pass the filter.
+    def filter(self, record):
+        return record.levelno == logging.INFO
+
+# Now only INFO level messages will be logged
+stream_handler.addFilter(InfoFilter())
+logger.addHandler(stream_handler)
+```
+## Other configuration methods
+We have seen how to configure logging creating loggers, handlers, and formatters explicitely in code. There are two other configration methods:
+- Creating a logging config file and reading it using the `fileConfig()` function. See example below.
+- Creating a dictionary of configuration information and passing it to the `dictConfig()` function. See https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig for more information.
+
+#### .conf file
+Create a *.conf* (or sometimes stored as *.ini*) file, define the loggers, handlers, and formatters and provide the names as keys. After their names are defined, they are configured by adding the words *logger*, *handler*, and *formatter* before their names separated by an underscore. Then you can set the properties for each logger, handler, and formatter. In the example below, the root logger and a logger named *simpleExample* will be configured with a StreamHandler.
+```Python
+# logging.conf
+[loggers]
+keys=root,simpleExample
+
+[handlers]
+keys=consoleHandler
+
+[formatters]
+keys=simpleFormatter
+
+[logger_root]
+level=DEBUG
+handlers=consoleHandler
+
+[logger_simpleExample]
+level=DEBUG
+handlers=consoleHandler
+qualname=simpleExample
+propagate=0
+
+[handler_consoleHandler]
+class=StreamHandler
+level=DEBUG
+formatter=simpleFormatter
+args=(sys.stdout,)
+
+[formatter_simpleFormatter]
+format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+```
+```Python
+# Then use the config file in the code
+import logging
+import logging.config
+
+logging.config.fileConfig('logging.conf')
+
+# create logger with the name from the config file. 
+# This logger now has StreamHandler with DEBUG Level and the specified format
+logger = logging.getLogger('simpleExample')
+
+logger.debug('debug message')
+logger.info('info message')`
+```
+## Capture Stack traces
+Logging the traceback in your exception logs can be very helpful for troubleshooting issues. You can capture the traceback in *logging.error()* by setting the *exc_info* parameter to True.
+```Python
+import logging
+
+try:
+    a = [1, 2, 3]
+    value = a[3]
+except IndexError as e:
+    logging.error(e)
+    logging.error(e, exc_info=True)
+```
+If you don't capture the correct Exception, you can also use the *traceback.format_exc()* method to log the exception.
+```Python
+import logging
+import traceback
+
+try:
+    a = [1, 2, 3]
+    value = a[3]
+except:
+    logging.error("uncaught exception: %s", traceback.format_exc())
+```
+## Rotating FileHandler
+When you have a large application that logs many events to a file, and you only need to keep track of the most recent events, then use a RotatingFileHandler that keeps the files small.
+When the log reaches a certain number of bytes, it gets "rolled over". You can also keep multiple backup log files before overwriting them.
+```Python
+import logging
+from logging.handlers import RotatingFileHandler
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# roll over after 2KB, and keep backup logs app.log.1, app.log.2 , etc.
+handler = RotatingFileHandler('app.log', maxBytes=2000, backupCount=5)
+logger.addHandler(handler)
+
+for _ in range(10000):
+    logger.info('Hello, world!')
+```
+## TimedRotatingFileHandler
+If your application will be running for a long time, you can use a TimedRotatingFileHandler. This will create a rotating log based on how much time has passed. Possible time conditions for the *when* parameter are:
+- second (s)
+- minute (m)
+- hour (h)
+- day (d)
+- w0-w6 (weekday, 0=Monday)
+- midnight
+```Python
+import logging
+import time
+from logging.handlers import TimedRotatingFileHandler
+ 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# This will create a new log file every minute, and 5 backup files with a timestamp before overwriting old logs.
+handler = TimedRotatingFileHandler('timed_test.log', when='m', interval=1, backupCount=5)
+logger.addHandler(handler)
+ 
+for i in range(6):
+    logger.info('Hello, world!')
+    time.sleep(50)`
+```
+# Logging in JSON Format
+If your application generates many logs from different modules, and especially in a microservice architecture, it can be challenging to locate the important logs for your analysis. Therefore, it is best practice to log your messages in JSON format, and send them to a centralized log management system. Then you can easily search, visualize, and analyze your log records.  
+I would recommend using this Open Source JSON logger: https://github.com/madzak/python-json-logger  
+`pip install python-json-logger`
+```Python
+import logging
+from pythonjsonlogger import jsonlogger
+
+logger = logging.getLogger()
+
+logHandler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter()
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)****
+```
+<br/>
+<br/>
 
 ## 8. Lambda
+[🔼 Back to top](#content)
 ```Python
 
 ```
-
-## 8. Lambda
-```Python
-
-```
+<br/>
+<br/>
