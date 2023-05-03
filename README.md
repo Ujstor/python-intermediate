@@ -3,7 +3,7 @@
 
 
 
-## Here's a summary of some of the intermediate-level topics for Python programming covered in this [YouTube]((https://www.youtube.com/watch?v=HGOBQPFzWKo&t=213s)) video. <!-- omit in toc -->
+## Here's a summary of some of the intermediate-level topics for Python programming covered in this [YouTube](https://www.youtube.com/watch?v=HGOBQPFzWKo&t=213s) video. <!-- omit in toc -->
 <br/>
 
 1. Data types: lists, tuples, dictionaries, sets, and strings
@@ -40,6 +40,9 @@
 - [8. Lambda Functions](#8-lambda-functions)
 - [9. Exceptions and Errors](#9-exceptions-and-errors)
 - [10. Logging](#10-logging)
+- [11. JSON](#11-json)
+- [12. Random Numbers](#12-random-numbers)
+- [13. Decorators](#13-decorators)
 
 
 ## Cheat Sheets <!-- omit in toc -->
@@ -1166,6 +1169,329 @@ logHandler = logging.StreamHandler()
 formatter = jsonlogger.JsonFormatter()
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)****
+```
+<br/>
+<br/>
+
+## 11. Json
+[🔼 Back to top](#content)
+```Python
+# java scrypt object notation
+import json
+
+person = {"name": "John", "age": 30, "city": "New York", "hasChildren": False, "titles": ["engineer", "programmer"]}
+
+
+#serialize into json
+personJson = json.dumps(person, indent=4, sort_keys=True)
+print(personJson)
+
+""" {
+    "age": 30,
+    "city": "New York",
+    "hasChildren": false,
+    "name": "John",
+    "titles": [
+        "engineer",
+        "programmer"
+    ]
+} """
+
+with open('person.json', 'w') as file:
+    json.dump(person, file, indent=4)
+
+# deserialize json
+person = json.loads(personJson)
+print(person) # {'name': 'John', 'age': 30, 'city': 'New York', 'hasChildren': False, 'titles': ['engineer', 'programmer']}
+
+with open('person.json', 'r') as file:
+    person = json.load(file)
+    print(person)
+
+
+# encoding custom objects
+class User:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+
+def encode_user(o):
+    if isinstance(o, User):
+        return {'name': o.name, 'age': o.age, o.__class__.__name__: True}
+    else:
+        raise TypeError('Object of type User is not JSON serializable') 
+
+
+from json import JSONEncoder
+class UserEncoder(JSONEncoder):
+    def default(self, o):
+        if isinstance(o, User):
+            return {'name': o.name, 'age': o.age, o.__class__.__name__: True}
+        return JSONEncoder.default(self, o) # call the default method of the parent class, rewrite the default method
+
+
+user = User('Max', 27)
+userJson = json.dumps(user, default=encode_user)
+print(userJson) # {"name": "Max", "age": 27, "User": true}
+
+userJson = json.dumps(user, cls=UserEncoder)
+print(userJson) # {"name": "Max", "age": 27, "User": true}
+
+userJson = UserEncoder().encode(user)
+print(userJson) # {"name": "Max", "age": 27, "User": true} #directly use the UserEncoder class
+
+
+
+# decoding custom objects
+userJson = userJson = UserEncoder().encode(user)
+
+def decode_user(dct):
+    if User.__name__ in dct:
+        return User(name=dct['name'], age=dct['age'])
+    return dct
+
+
+user = json.loads(userJson)
+print(user) # {'name': 'Max', 'age': 27, 'User': True} #python dict not User object
+
+user = json.loads(userJson, object_hook=decode_user)
+print(user) # <__main__.User object at 0x000001F4F2F3F4C0> #User object
+print(user.name) # Max
+print(user.age) # 27
+
+```
+<br/>
+<br/>
+
+## 12. Random numbers
+[🔼 Back to top](#content)
+```Python
+import random
+#sudo random number generator; the are not truly random, reproducible with the same seed
+
+a = random.random() #random float between 0 and 1
+print(a)
+
+a = random.uniform(1, 10) #random float between 1 and 10
+print(a)
+
+a = random.randint(1, 10) #random integer between 1 and 10
+print(a)
+
+a = random.randrange(1, 10) #random integer between 1 and 9
+print(a)
+
+a = random.normalvariate(0, 1) #random float from a normal distribution; mean 0, standard deviation 1
+
+
+mylist = list("ABCDEFGH")
+print(mylist)
+a = random.choice(mylist) #random element from a list
+print(a)
+
+a = random.sample(mylist, 3) #random 3 unique elements from a list
+print(a)
+
+a = random.choices(mylist, k=3) #random 3 elements from a list; can be repeated
+print(a)
+
+a = random.shuffle(mylist) #shuffle a list
+print(mylist)
+
+#seed the random number generator
+#not recommended to use in production
+random.seed(1) 
+print(random.random())
+print(random.randint(1, 10))
+
+random.seed(2) 
+print(random.random())
+print(random.randint(1, 10))
+
+random.seed(1) 
+print(random.random())
+print(random.randint(1, 10))
+
+random.seed(2) 
+print(random.random())
+print(random.randint(1, 10))
+
+
+
+import secrets
+#passwords, security tokens, authentication (take more time to generate)
+
+a = secrets.randbelow(10) #random integer between 0 and 9
+print(a)
+
+a = secrets.randbits(4) #random integer with 4 bits of entropy
+print(a)
+
+mylist = list("ABCDEFGH")
+a = secrets.choice(mylist) #random element from a list
+
+#numpy
+import numpy as np
+a = np.random.rand(3) #random floats in a numpy array
+print(a)
+
+a = np.random.rand(3, 3) #random floats in a numpy array
+print(a)
+
+a = np.random.randint(0, 10, 3) #random integers in a numpy array; between 0 and 9
+print(a)
+
+a = np.random.randint(0, 10, (3, 4)) #random integers in a 3D numpy array; between 0 and 9
+print(a)
+
+arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+print(arr)
+np.random.shuffle(arr) #shuffle a numpy array on the first axis
+print(arr)
+
+#seed the random number generator; use in production
+np.random.seed(1)
+print(np.random.rand(3, 3)) 
+np.random.seed(1)
+print(np.random.rand(3, 3)) 
+```
+<br/>
+<br/>
+
+## 13. Decorators
+[🔼 Back to top](#content)
+```Python
+# function and class decorators
+
+# decorator is a function that takes another function as an argument and returns a new function
+# without changing the source code of the original function that was passed in
+# allow you to extend and modify the behavior of a callable (functions, methods, and classes) without permanently modifying the callable itself
+
+""" @my_decorator
+def dosomething():
+    pass """
+
+def start_end_decorator(func):
+    def wrapper():
+        print("Start")
+        func()
+        print("End")
+    return wrapper
+
+@start_end_decorator
+def print_name():
+    print("Alex")
+
+print_name() # Alex
+print_name = start_end_decorator(print_name) # Start, Alex, End
+print_name() # Start, Alex, End
+
+
+
+import functools
+def start_end_decorator2(func):
+    @functools.wraps(func) # to fix the problem of print(help(add5)) and print(add5.__name__)
+    def wrapper(*args, **kwargs):
+        print("Start")
+        result = func(*args, **kwargs)
+        print("End")
+        return result
+    return wrapper
+
+@start_end_decorator2
+def add5(x):
+    return x + 5
+
+add5(10) # TypeError: wrapper() takes 0 positional arguments but 1 was given; add *args and **kwargs to wrapper() to fix this
+# and return result
+
+result = add5(10)
+print(result) # Start, End, 15
+
+print(help(add5)) # add5(x)
+print(add5.__name__) # wrapper; to fix this, use functools.wraps
+
+
+
+# decorators with arguments
+def repeat(num_times):
+    def decorator_repeat(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for _ in range(num_times):
+                result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator_repeat
+
+
+@repeat(num_times=3)
+def greet(name):
+    print(f"Hello {name}")
+
+greet("Alex") # Hello Alex, Hello Alex, Hello Alex
+
+
+
+#nested decorators
+def debug(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        args_repr = [repr(a) for a in args]
+        kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]
+        signature = ", ".join(args_repr + kwargs_repr)
+        print(f"Calling {func.__name__}({signature})")
+        result = func(*args, **kwargs)
+        print(f"{func.__name__!r} returned {result!r}")
+        return result
+    return wrapper
+
+
+
+@debug
+@start_end_decorator2
+def say_hello(name):
+    greeting = f'Hello {name}'
+    print(greeting)
+    return greeting
+
+say_hello("Alex")
+
+""" Calling say_hello('Alex')
+Start
+Hello Alex
+End
+'say_hello' returned 'Hello Alex' """
+
+
+#class decorators (for maintaining and update state)
+class CountCalls:
+    def __init__(self, func):
+        self.func = func
+        self.num_calls = 0
+
+    def __call__(self, *args, **kwargs):
+        self.num_calls += 1
+        print(f"This is executed {self.num_calls} times")
+        return self.func(*args, **kwargs)
+
+@CountCalls
+def say_hello():
+    print("Hello")
+
+say_hello()
+say_hello()
+say_hello()
+
+""" This is executed 1 times
+Hello
+This is executed 2 times
+Hello
+This is executed 3 times
+Hello """
+
+#use cases: logging, timing, register plugins, enforcing access control and authentication, etc.
 ```
 <br/>
 <br/>
