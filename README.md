@@ -30,6 +30,8 @@
 
 
 
+
+
 - [1. Lists](#1-lists)
 - [2. Tuples](#2-tuples)
 - [3. Dictionaries](#3-dictionaries)
@@ -40,9 +42,12 @@
 - [8. Lambda Functions](#8-lambda-functions)
 - [9. Exceptions and Errors](#9-exceptions-and-errors)
 - [10. Logging](#10-logging)
-- [11. JSON](#11-json)
-- [12. Random Numbers](#12-random-numbers)
+- [11. Json](#11-json)
+- [12. Random numbers](#12-random-numbers)
 - [13. Decorators](#13-decorators)
+- [14. Generators](#14-generators)
+- [15. Threading and Multiprocessing](#15-threading-and-multiprocessing)
+- [11. Next](#11-next)
 
 
 ## Cheat Sheets <!-- omit in toc -->
@@ -952,7 +957,7 @@ logging.warning('This is a warning message')
 logging.error('This is an error message')
 logging.critical('This is a critical message')
 ```
-## Configuration
+## Configuration <!-- omit in toc -->
 With `basicConfig(**kwargs)` you can customize the root logger. The most common parameters are the *level*, the *format*, and the *filename*. See https://docs.python.org/3/library/logging.html#logging.basicConfig for all possible arguments. See also https://docs.python.org/3/library/logging.html#logrecord-attributes for possible formats and https://docs.python.org/3/library/time.html#time.strftime how to set the time string. Note that this function should only be called once, and typically first thing after importing the module. It has no effect if the root logger already has handlers configured. For example calling `logging.info(...)` before the *basicConfig* will already set a handler.
 ```Python
 import logging
@@ -963,7 +968,7 @@ logging.debug('Debug message')
 # This would log to a file instead of the console.
 # logging.basicConfig(level=logging.DEBUG, filename='app.log')
 ```
-## Logging in modules and logger hierarchy
+## Logging in modules and logger hierarchy <!-- omit in toc -->
 Best practice in your application with multiple modules is to create an internal logger using the `__name__` global variable. This will create a logger with the name of your module and ensures no name collisions. The logging module creates a hierarchy of loggers, starting with the root logger, and adding the new logger to this hierarchy. If you then import your module in another module, log messages can be associated with the correct module through the logger name. Note that changing the basicConfig of the root logger will also affect the log events of the other (lower) loggers in the hierarchy.
 
 ```Python
@@ -982,7 +987,7 @@ import helper
 # --> Output when running main.py
 # helper - INFO - HELLO
 ```
-## Propagation
+## Propagation <!-- omit in toc -->
 By default, all created loggers will pass the log events to the handlers of higher loggers, in addition to any handlers attached to the created logger. You can deactivate this by setting `propagate = False`. Sometimes when you wonder why you don't see log messages from another module, then this property may be the reason.
 ```Python
 # helper.py
@@ -1000,7 +1005,7 @@ import helper
 
 # --> No output when running main.py since the helper module logger does not propagate its messages to the root logger
 ```
-## LogHandlers
+## LogHandlers <!-- omit in toc -->
 Handler objects are responsible for dispatching the appropriate log messages to the handler's specific destination. For example you can use different handlers to send log messaged to the standard output stream, to files, via HTTP, or via Email. Typically you configure each handler with a level (`setLevel()`), a formatter (`setFormatter()`), and optionally a filter (`addFilter()`). See https://docs.python.org/3/howto/logging.html#useful-handlers for possible built-in handlers. Of course you can also implement your own handlers by deriving from these classes.
 ```Python
 import logging
@@ -1027,7 +1032,7 @@ logger.addHandler(file_handler)
 logger.warning('This is a warning') # logged to the stream
 logger.error('This is an error') # logged to the stream AND the file!
 ```
-#### Example of a filter
+#### Example of a filter <!-- omit in toc -->
 ```Python
 class InfoFilter(logging.Filter):
     
@@ -1040,12 +1045,12 @@ class InfoFilter(logging.Filter):
 stream_handler.addFilter(InfoFilter())
 logger.addHandler(stream_handler)
 ```
-## Other configuration methods
+## Other configuration methods <!-- omit in toc -->
 We have seen how to configure logging creating loggers, handlers, and formatters explicitely in code. There are two other configration methods:
 - Creating a logging config file and reading it using the `fileConfig()` function. See example below.
 - Creating a dictionary of configuration information and passing it to the `dictConfig()` function. See https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig for more information.
 
-#### .conf file
+#### .conf file <!-- omit in toc -->
 Create a *.conf* (or sometimes stored as *.ini*) file, define the loggers, handlers, and formatters and provide the names as keys. After their names are defined, they are configured by adding the words *logger*, *handler*, and *formatter* before their names separated by an underscore. Then you can set the properties for each logger, handler, and formatter. In the example below, the root logger and a logger named *simpleExample* will be configured with a StreamHandler.
 ```Python
 # logging.conf
@@ -1091,7 +1096,7 @@ logger = logging.getLogger('simpleExample')
 logger.debug('debug message')
 logger.info('info message')`
 ```
-## Capture Stack traces
+## Capture Stack traces <!-- omit in toc -->
 Logging the traceback in your exception logs can be very helpful for troubleshooting issues. You can capture the traceback in *logging.error()* by setting the *exc_info* parameter to True.
 ```Python
 import logging
@@ -1114,7 +1119,7 @@ try:
 except:
     logging.error("uncaught exception: %s", traceback.format_exc())
 ```
-## Rotating FileHandler
+## Rotating FileHandler <!-- omit in toc -->
 When you have a large application that logs many events to a file, and you only need to keep track of the most recent events, then use a RotatingFileHandler that keeps the files small.
 When the log reaches a certain number of bytes, it gets "rolled over". You can also keep multiple backup log files before overwriting them.
 ```Python
@@ -1131,7 +1136,7 @@ logger.addHandler(handler)
 for _ in range(10000):
     logger.info('Hello, world!')
 ```
-## TimedRotatingFileHandler
+## TimedRotatingFileHandler <!-- omit in toc -->
 If your application will be running for a long time, you can use a TimedRotatingFileHandler. This will create a rotating log based on how much time has passed. Possible time conditions for the *when* parameter are:
 - second (s)
 - minute (m)
@@ -1155,7 +1160,10 @@ for i in range(6):
     logger.info('Hello, world!')
     time.sleep(50)`
 ```
-# Logging in JSON Format
+
+
+## Logging in JSON Format  <!-- omit in toc -->
+
 If your application generates many logs from different modules, and especially in a microservice architecture, it can be challenging to locate the important logs for your analysis. Therefore, it is best practice to log your messages in JSON format, and send them to a centralized log management system. Then you can easily search, visualize, and analyze your log records.  
 I would recommend using this Open Source JSON logger: https://github.com/madzak/python-json-logger  
 `pip install python-json-logger`
@@ -1496,6 +1504,285 @@ Hello """
 <br/>
 <br/>
 
+## 14. Generators
+[🔼 Back to top](#content)
+```Python
+# special kind of function that return a lazy iterator.
+#These are objects that you can loop over like a list.
+#However, unlike lists, lazy iterators do not store their contents in memory
+#This is great for memory efficiency
+
+def my_generator():
+    print("Inside my generator")
+    yield 1
+    yield 2
+    yield 3
+
+g = my_generator()
+print (g) #<generator object my_generator at 0x000001BA83809A80>
+
+for i in g:
+    print(i) 
+
+
+g = my_generator()
+
+value = next(g)
+print(value) #1 returns the next value in the sequence
+
+value = next(g)
+print(value) #2
+
+value = next(g)
+print(value) #3
+
+""" value = next(g)
+print(value) #StopIteration error """
+
+print(sum(g)) #6
+print(sorted(g)) #[1, 2, 3]
+
+
+#execution stops when the function encounters a yield statement
+#execution resumes when next() is called again
+def countdown(num):
+    print("Starting")
+    while num > 0:
+        yield num
+        num -= 1
+
+cd = countdown(4)
+print(cd) #<generator object countdown at 0x000001BA83809A20>
+
+value = next(cd) #Starts the generator
+print(value) #4
+print(next(cd)) #3
+print(next(cd)) #2
+print(next(cd)) #1
+#print(next(cd)) #StopIteration error
+
+
+#Generators are memory efficient because they only load the data needed to process the next value in the iterable
+import sys
+def firstn(n): #takes a lot of memory
+    nums = []
+    num = 0
+    while num < n:
+        nums.append(num)
+        num += 1
+    return nums
+
+mylist = firstn(10)
+print(mylist) #[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+print(sum(firstn(10))) #45
+
+
+def firstn_generator(n): #implementation as a generator object
+    num = 0
+    while num < n:
+        yield num
+        num += 1
+
+print(sum(firstn_generator(10))) #45 we are not saving the list in memory
+
+
+print(sys.getsizeof(firstn(1000000))) #8448728 bytes
+print(sys.getsizeof(firstn_generator(1000000))) #104 bytes
+
+
+
+def fibonacci(limit):
+    #0,1,1,2,3,5,8,13,21,34,55
+    a,b = 0,1
+    while a < limit:
+        yield a
+        a,b = b, a+b
+
+fib = fibonacci(30)
+for i in fib:
+    print(i) #0 1 1 2 3 5 8 13 21
+
+
+#Generator Expressions
+mygenerator = (i for i in range(10) if i % 2 == 0)
+for i in mygenerator:
+    print(i) #0 2 4 6 8
+
+mygenerator = (i for i in range(1000000) if i % 2 == 0)
+#print(list(mygenerator)) #[0, 2, 4, 6, 8]
+print(sys.getsizeof(mygenerator)) #104 bytes
+
+#list comprehension use square brackets []
+mylist = [i for i in range(1000000) if i % 2 == 0]
+#print(mylist) #[0, 2, 4, 6, 8]
+print(sys.getsizeof(mylist)) #4167352 bytes
+
+
+```
+<br/>
+<br/>
+
+## 15. Threading and Multiprocessing 
+[🔼 Back to top](#content)
+
+We have two common approaches to run code in parallel (achieve multitasking and speed up your program) : via threads or via multiple processes.
+<br/>
+<br/>
+### Process <!-- omit in toc -->
+
+A Process is an instance of a program, e.g. a Python interpreter. They are independent from each other and do not share the same memory.
+<br/>
+<br/>
+
+Key facts:
+
+    A new process is started independently from the first process
+
+    Takes advantage of multiple CPUs and cores
+
+    Separate memory space
+
+    Memory is not shared between processes
+
+    One GIL (Global interpreter lock) for each process, i.e. avoids GIL limitation
+
+    Great for CPU-bound processing
+
+    Child processes are interruptable/killable
+
+    Starting a process is slower that starting a thread
+
+    Larger memory footprint
+
+    IPC (inter-process communication) is more complicated
+<br/>
+
+```Python
+#multiprocessing
+
+
+from multiprocessing import Process
+import os
+import time
+
+
+def square_numbers():
+    for i in range(100):
+        result = i * i
+        time.sleep(0.1)
+
+
+if __name__ == "__main__":
+    processes = []
+    num_processes = os.cpu_count()
+
+    # create processes and asign a function for each process
+    for i in range(num_processes):
+        process = Process(target=square_numbers) # if arg in func (target=square_numbers, args=(i,))
+        processes.append(process)
+
+    # start all processes
+    for process in processes:
+        process.start()
+
+    # wait for all processes to finish
+    # block the main thread until these processes are finished
+    for process in processes:
+        process.join()
+    print('end main')
+```
+<br/>
+
+![](https://i.imgur.com/kiCJw9f.png)
+<br/>
+<br/>
+
+### Threads <!-- omit in toc -->
+
+A thread is an entity within a process that can be scheduled for execution (Also known as "leightweight process"). A Process can spawn multiple threads. The main difference is that all threads within a process share the same memory.
+<br/>
+<br/>
+
+Key facts:
+
+    Multiple threads can be spawned within one process
+
+    Memory is shared between all threads
+
+    Starting a thread is faster than starting a process
+
+    Great for I/O-bound tasks
+
+    Leightweight - low memory footprint
+
+    One GIL for all threads, i.e. threads are limited by GIL
+
+    Multithreading has no effect for CPU-bound tasks due to the GIL
+
+    Not interruptible/killable -> be careful with memory leaks
+
+    increased potential for race conditions
+<br/>
+
+```Python
+from threading import Thread
+import time
+
+def square_numbers():
+    for i in range(100):
+        result = i * i
+        time.sleep(0.1)
+
+if __name__ == "__main__":
+    threads = []
+    num_threads = 15
+
+    # create threads and asign a function for each thread
+    for i in range(num_threads):
+        thread = Thread(target=square_numbers) # if arg in func (target=square_numbers, args=(i,))
+        threads.append(thread)
+
+    # start all threads
+    for thread in threads:
+        thread.start()
+
+    # wait for all threads to finish
+    # block the main thread until these threads are finished
+    for thread in threads:
+        thread.join()
+
+    print("end main")
+```
+<br/>
+
+![](https://i.imgur.com/Y0PY7Yj.png)
+<br/>
+
+
+### GIL - Global interpreter lock <!-- omit in toc -->
+
+This is a mutex (or a lock) that allows only one thread to hold control of the Python interpreter. This means that the GIL allows only one thread to execute at a time even in a multi-threaded architecture.
+<br/>
+<br/>
+
+#### Why is it needed? <!-- omit in toc -->
+
+It is needed because CPython's (reference implementation of Python) memory management is not thread-safe. Python uses reference counting for memory management. It means that objects created in Python have a reference count variable that keeps track of the number of references that point to the object. When this count reaches zero, the memory occupied by the object is released. The problem was that this reference count variable needed protection from race conditions where two threads increase or decrease its value simultaneously. If this happens, it can cause either leaked memory that is never released or incorrectly release the memory while a reference to that object still exists.
+<br/>
+<br/>
+
+#### How to avoid the GIL <!-- omit in toc -->
+
+The GIL is very controversial in the Python community. The main way to avoid the GIL is by using multiprocessing instead of threading. Another (however uncomfortable) solution would be to avoid the CPython implementation and use a free-threaded Python implementation like Jython or IronPython. A third option is to move parts of the application out into binary extensions modules, i.e. use Python as a wrapper for third party libraries (e.g. in C/C++). This is the path taken by numypy and scipy.
+<br/>
+<br/>
+
+
+
+<br/>
+
+
 ## 11. Next
 [🔼 Back to top](#content)
 ```Python
@@ -1503,3 +1790,5 @@ Hello """
 ```
 <br/>
 <br/>
+
+
