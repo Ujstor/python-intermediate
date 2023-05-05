@@ -47,6 +47,8 @@
 - [13. Decorators](#13-decorators)
 - [14. Generators](#14-generators)
 - [15. Threading and Multiprocessing](#15-threading-and-multiprocessing)
+- [16. Threading](#16-threading)
+- [16. Multiprocessing](#16-multiprocessing)
 - [11. Next](#11-next)
 
 
@@ -1778,10 +1780,78 @@ The GIL is very controversial in the Python community. The main way to avoid the
 <br/>
 <br/>
 
+## 16. Threading
+[🔼 Back to top](#content)
+```Python
+from threading import Thread, Lock, current_thread
+from queue import Queue
+
+def worker(q, lock):
+    while True:
+        value = q.get()  # blocks until the item is available
+
+        # do stuff...
+        with lock:
+            # prevent printing at the same time with this lock
+            print(f"in {current_thread().name} got {value}")
+        # ...
+
+        # For each get(), a subsequent call to task_done() tells the queue
+        # that the processing on this item is complete.
+        # If all tasks are done, q.join() can unblock
+        q.task_done()
 
 
+if __name__ == '__main__':
+    q = Queue()
+    num_threads = 15
+    lock = Lock()
+
+    for i in range(num_threads):
+        t = Thread(name=f"Thread{i+1}", target=worker, args=(q, lock))
+        t.daemon = True  # dies when the main thread dies
+        t.start()
+
+    # fill the queue with items
+    for x in range(20):
+        q.put(x)
+
+    q.join()  # Blocks until all items in the queue have been gotten and processed.
+
+    print('main done')
+
+""" in Thread1 got 0
+in Thread2 got 1
+in Thread3 got 2
+in Thread4 got 3
+in Thread5 got 4
+in Thread6 got 5
+in Thread7 got 6
+in Thread8 got 7
+in Thread9 got 8
+in Thread10 got 9
+in Thread11 got 10
+in Thread12 got 11
+in Thread13 got 12
+in Thread14 got 13
+in Thread15 got 14
+in Thread1 got 15
+in Thread2 got 16
+in Thread3 got 17
+in Thread4 got 18
+in Thread5 got 19
+main done """
+```
+<br/>
 <br/>
 
+## 16. Multiprocessing
+[🔼 Back to top](#content)
+```Python
+
+```
+<br/>
+<br/>
 
 ## 11. Next
 [🔼 Back to top](#content)
@@ -1790,5 +1860,7 @@ The GIL is very controversial in the Python community. The main way to avoid the
 ```
 <br/>
 <br/>
+
+
 
 
