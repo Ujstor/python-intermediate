@@ -22,6 +22,7 @@
 14. Function Arguments: how to pass arguments to functions and work with default arguments, keyword arguments, and variable-length argument lists
 15. Shallow vs Deep Copying: understanding the difference between these two techniques for copying objects in Python
 16. Context Managers: using the "with" statement to manage resources and ensure proper clean-up of objects after use.
+17. Object-Oriented Programming: an introduction to object-oriented programming concepts like classes, objects, inheritance, and polymorphism
 <br/>
 <br/>
 
@@ -53,6 +54,7 @@
 - [19. The Asterisk (\*) Operator](#19-the-asterisk--operator)
 - [20. Shallow vs Deep Copying](#20-shallow-vs-deep-copying)
 - [21. Context Managers](#21-context-managers)
+- [22. Object Oriented Programming](#22-object-oriented-programming)
 
 
 ## Cheat Sheets <!-- omit in toc -->
@@ -2242,7 +2244,287 @@ with open_managed_file('notes.txt') as f:
     f.write('hello, world!')
     f.write('bye now')
 ```
+<br/>
+<br/>
+
+## 22. Object Oriented Programming
+[🔼 Back to top](#content)
+```Python
+#position, name, age, level, salary
+se1 = ['Software Engineer', 'Max', 25, 'Junior', 5000]
+se2 = ['Software Engineer', 'Lisa', 28, 'Senior', 7000]
+
+#class is better structure than a list to represent software engineer
+
+class SoftwareEngineer:
+
+    # class attributes; can be used on class itself or on instance
+    alias = 'Keyboard Magician' #belong to class; same for all instances and we can access it without creating an instance
+
+    def __init__(self, name, age, level, salary):
+        # instance attributes; belong to one instance that we create
+        self.name = name
+        self.age = age
+        self.level = level
+        self.salary = salary
+
+# instance
+se1 = SoftwareEngineer('Max', 25, 'Junior', 5000)
+print(se1.name, se1.age, se1.level, se1.salary)
+print(se1.alias)
+print(SoftwareEngineer.alias)
+se2 = SoftwareEngineer('Lisa', 28, 'Senior', 7000)
+
+#Recap
+# create a class (blueprint)
+# create an instance (object)
+# class vs instance
+# instance attributes: defined in __init__ method
+# class attributes: defined outside __init__ method
+```
+
+```Python
+class SoftwareEngineer:
+    #class attributes
+    alias = 'Keyboard Magician'
+
+    def __init__(self, name, age, level, salary):
+        # instance attributes; belong to one instance that we create
+        self.name = name
+        self.age = age
+        self.level = level
+        self.salary = salary
+
+    # instance method
+    def code(self):
+        print(f'{self.name} is writing code...')
+
+    def code_in_language(self, language):
+        print(f'{self.name} is writing code in {language}...')
+
+    #def information(self):
+        #information = f'name = {self.name}, age = {self.age}, level = {self.level}'
+        #return information
+
+    #special method's (dunder/magic method)
+    def __str__(self):
+        information = f'name = {self.name}, age = {self.age}, level = {self.level}'
+        return information
+
+    def __eq__(self, other):
+        return self.name == other.name and self.age == other.age
+
+    @staticmethod
+    def entry_salary(age): #self isn't passed intentionally; use static decorator(prevent crash if we don't pass self)
+        if age < 25:
+            return 5000
+        if age < 30:
+            return 7000
+        return 9000
 
 
 
+# instance
+se1 = SoftwareEngineer('Max', 25, 'Junior', 5000)
+se2 = SoftwareEngineer('Lisa', 28, 'Senior', 7000)
 
+se4 = SoftwareEngineer('Max', 27, 'Junior', 5000)
+se3 = SoftwareEngineer('Lisa', 28, 'Senior', 7000)
+
+se1.code() #when we call this method, self will be se1 and we don't need to pass it
+se2.code()
+se1.code_in_language('Python')
+se2.code_in_language('Java')
+
+print(se1) #__str__ method is called and it returns the string
+print(se2)
+
+print(se2 == se3) #False without __eq__ because they are different instances in memory
+print(se1 == se4)
+
+se1.entry_salary(24) #TypeError: SoftwareEngineer.entry_salary() takes 1 positional argument but 2 were given; self is passed automatically; we need to use static method
+SoftwareEngineer.entry_salary(24) #we need call it on class itself, not on instance
+
+#Recap
+# instance method: first argument is self
+# can taka arguments and return values
+# special dunder methods: __str__, __eq__
+# static method: no self argument; can't access or modify class state
+```
+
+```Python
+#inheritance all attributes and methods from parent class
+
+
+#inherits, extends, overrides
+class Employee:
+    def __init__(self, name, age, salary):
+        self.name = name
+        self.age = age
+        self.salary = salary
+
+    def work(self):
+        print(f'{self.name} is working...')
+
+
+class SoftwareEngineer(Employee):
+    def __init__(self, name, age, salary, level):
+        super().__init__(name, age, salary)
+        self.level = level
+
+    def debug(self):
+        print(f'{self.name} is debugging...')
+
+    def work(self):
+        print(f'{self.name} is coding...') #override work method from parent class; same name and same arguments
+
+class Designer(Employee):
+
+    def draw(self):
+        print(f'{self.name} is drawing...')
+
+    def work(self):
+        print(f'{self.name} is designing...')
+
+
+
+se = SoftwareEngineer('Max', 25, 6000, "Junior")
+print(se.name, se.age)
+se.work()
+print(se.level)
+se.debug()
+#se.drw() #AttributeError: 'SoftwareEngineer' object has no attribute 'drw'
+
+d = Designer('Philipp', 28, 7000)
+print(d.name, d.age)
+d.work()
+d.draw()
+```
+
+```Python
+#Polymorphism (many forms)
+#works with super class and sub classes
+
+employees = [SoftwareEngineer('Max', 25, 6000, "Junior"),
+             SoftwareEngineer('Lisa', 28, 8000, "Senior"),
+             Designer('Philipp', 28, 7000)]
+
+def motivate_employees(employees):
+    for employee in employees:
+        employee.work()
+
+motivate_employees(employees)
+
+#Recap
+# inheritance: ChildClass(ParentClass)
+# inherit, extend, override
+# super().__init__()
+# polymorphism: same method name, different behavior
+```
+
+```Python
+#Encapsulation and Abstraction
+#hide data from outside and only expose what's necessary
+
+class SoftwareEngineer:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self._salary = None #protected attribute (private is __salary)
+        self._num_bugs_solved = 0
+
+    def code(self):
+        self._num_bugs_solved += 1
+
+    #getter
+    def get_salary(self):
+        return self._salary
+
+    #setter
+    def set_salary(self, base_value):
+        #check value, enforce constraints
+        """ if base_value < 1000:
+            self._salary = 1000
+        elif base_value > 20000:
+            self._salary = 20000
+        self._salary = base_value """
+
+        self._salary = self._calculate_salary(base_value) #private method
+
+    def _calculate_salary(self, base_value):
+        if self._num_bugs_solved < 10:
+            return base_value
+        if self._num_bugs_solved < 100:
+            return base_value * 2
+        return base_value * 3
+
+
+
+se = SoftwareEngineer('Max', 25)
+print(se.name, se.age)
+
+se.set_salary(6000)
+print(se.get_salary())
+
+for i in range(70):
+    se.code()
+se.set_salary(6000)
+print(se.get_salary())
+```
+
+```Python
+#Property decorator
+
+class SoftwareEngineer:
+    def __init__(self):
+        self._salary = None
+
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        self._salary = value
+
+se = SoftwareEngineer()
+se.salary = 6000
+print(se.salary)
+
+#more pythonic way
+#implementing encapsulation and abstraction
+```
+
+```Python
+class SoftwareEngineer:
+    def __init__(self):
+        self._salary = None
+
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        self._salary = value
+
+    @salary.deleter
+    def salary(self):
+        self._salary = value
+
+se = SoftwareEngineer()
+se.salary = 6000
+print(se.salary)
+del se.salary
+print(se.salary)
+
+#Recap
+# encapsulation: hide data from outside
+# abstraction: expose only what's necessary
+# public, protected, private
+# _foo(), _x
+# getter/setter
+# getter -> @property
+# setter -> @x.setter
+# deleter -> @x,deleter
+```
